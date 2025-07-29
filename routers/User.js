@@ -14,20 +14,27 @@ router.post("/register", async (req, res) => {
   if (password !== confirmPassword) {
     return res.json({ message: "Password does not match" });
   }
-  const UserName = await User.findOne({ username });
-  const UserEmail = await User.findOne({ email });
-  if (UserName || UserEmail) {
-    return res.json({ message: "User Already exit go to login page" });
-  }
-  const hashedPassword = await bcrypt.hash(password, 10);
+  try {
+    const UserName = await User.findOne({ username });
+    const UserEmail = await User.findOne({ email });
+    if (UserName || UserEmail) {
+      return res.json({ message: "User Already exit go to login page" });
+    }
+    const hashedPassword = await bcrypt.hash(password, 10);
 
-  const user = new User({
-    username,
-    email,
-    firstname,
-    lastname,
-    password: hashedPassword,
-  });
-  await user.save();
-  return res.json({ message: "registration Done", user });
+    const user = new User({
+      username,
+      email,
+      firstname,
+      lastname,
+      password: hashedPassword,
+    });
+    await user.save();
+    return res.json({ message: "registration Done", user: user });
+  } catch (err) {
+    console.error(err);
+    res.json({ message: err });
+  }
 });
+
+module.exports = router;
