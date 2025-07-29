@@ -14,7 +14,11 @@ router.post("/register", async (req, res) => {
   if (password !== confirmPassword) {
     return res.json({ message: "Password does not match" });
   }
-
+  const UserName = await User.findOne({ username });
+  const UserEmail = await User.findOne({ email });
+  if (UserName || UserEmail) {
+    return res.json({ message: "User Already exit go to login page" });
+  }
   const user = new User({
     username,
     email,
