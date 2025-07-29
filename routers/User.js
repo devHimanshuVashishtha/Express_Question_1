@@ -19,12 +19,14 @@ router.post("/register", async (req, res) => {
   if (UserName || UserEmail) {
     return res.json({ message: "User Already exit go to login page" });
   }
+  const hashedPassword = await bcrypt.hash(password, 10);
+
   const user = new User({
     username,
     email,
     firstname,
     lastname,
-    password,
+    password: hashedPassword,
   });
   await user.save();
   return res.json({ message: "registration Done", user });
