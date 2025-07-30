@@ -1,13 +1,10 @@
 const express = require("express");
 const User = require("../models/user");
+const verification = require("../middleware/verifyToken");
 const router = express.Router();
 
-router.get("/get", async (req, res) => {
-  const token = req.headers['access_token'];
-  if (!token) return res.json({ message: "No token Found" });
-  const user = await User.findById(token);
-  if (!user) return res.json({ message: "Invalid Token Provided" });
-  return res.json({ user: user });
+router.get("/get", verification, (req, res) => {
+    res.json({message:'Token Verify',user:req.user})
 });
 
 module.exports = router;
