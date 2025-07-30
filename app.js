@@ -1,17 +1,23 @@
-const express = require('express')
-const mongoose = require('mongoose')
-const app = express()
-const mongoURI = "mongodb+srv://himanshuvashishtha001hp:K3EGwGLdCQaz7Aqe@express1.kvkgela.mongodb.net/expressdb1?retryWrites=true&w=majority&appName=Express1"
-const PORT = 3000
-const userRoute = require('./routers/User')
-// K3EGwGLdCQaz7Aqe
+const express = require("express");
+const mongoose = require("mongoose");
+require("dotenv").config();
+const app = express();
+const mongoURI = process.env.Mongo_URI;
+const PORT = process.env.PORT;
+const userRoute = require("./routers/User");
+const userLogin = require("./routers/UserLogin");
+const getDetails = require("./routers/UserDetails");
+const deleteData = require('./routers/DeleteData')
 
-app.use(express.json())
+mongoose.connect(mongoURI).then(() => console.log("MongoDB Connected"));
 
-app.use('/user',userRoute)
+app.use(express.json());
 
-mongoose.connect(mongoURI).then(console.log('MongoDB Connected'))
+app.use("/user", userRoute);
+app.use("/user", userLogin);
+app.use("/user", getDetails);
+app.use("/user", deleteData)
 
-app.listen(PORT,()=>{
-    console.log(`server Started at http://localhost:${PORT}`)
-})
+app.listen(PORT, () => {
+  console.log(`server Started at http://localhost:${PORT}`);
+});
