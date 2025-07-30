@@ -6,7 +6,7 @@ const bcrypt = require("bcrypt");
 router.post("/register", async (req, res) => {
   const { username, email, firstname, lastname, password, confirmPassword } =
     req.body;
-  if ((!username, !email, !firstname, !lastname, !password, !confirmPassword)) {
+  if ((!username || !email || !firstname || !lastname || !password || !confirmPassword)) {
     return res.json({
       message: "Please add all the Fields",
     });
@@ -17,7 +17,7 @@ router.post("/register", async (req, res) => {
   try {
     const UserName = await User.findOne({ username });
     const UserEmail = await User.findOne({ email });
-    if (UserName || UserEmail) {
+    if (UserName && UserEmail) {
       return res.json({ message: "User Already exit go to login page" });
     }
     const hashedPassword = await bcrypt.hash(password, 10);
