@@ -7,6 +7,7 @@ router.post("/login", async (req, res) => {
   const { username, password } = req.body;
   if ((!username || !password))
     return res.json({ message: "Please Enter all the field" });
+try{
   const checkUserName = await User.findOne({ username });
   if (!checkUserName)
     return res.json({ message: "No username Found Please register" });
@@ -14,6 +15,10 @@ router.post("/login", async (req, res) => {
   if(!checkPassword)
     return res.json({message:"Invalid Password"})
   return res.json({YourID:checkUserName._id})
+}catch(err){
+    console.error(err)
+    return res.json({message:'Server Error',error:err.message})
+}
 });
 
 module.exports = router;
