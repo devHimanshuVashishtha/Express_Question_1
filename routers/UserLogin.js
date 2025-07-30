@@ -6,18 +6,18 @@ const bcrypt = require("bcrypt");
 router.post("/login", async (req, res) => {
   const { username, password } = req.body;
   if ((!username || !password))
-    return res.json({ message: "Please Enter all the field" });
+    return res.status(500).json({ message: "Please Enter all the field" });
 try{
   const checkUserName = await User.findOne({ username });
   if (!checkUserName)
-    return res.json({ message: "No username Found Please register" });
+    return res.status(500).json({ message: "No username Found Please register" });
   const checkPassword = await bcrypt.compare(password,checkUserName.password)
   if(!checkPassword)
-    return res.json({message:"Invalid Password"})
-  return res.json({YourID:checkUserName._id})
+    return res.status(500).json({message:"Invalid Password"})
+  return res.status(200).json({YourID:checkUserName._id})
 }catch(err){
     console.error(err)
-    return res.json({message:'Server Error',error:err.message})
+    return res.status(500).json({message:'Server Error',error:err.message})
 }
 });
 
