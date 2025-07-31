@@ -4,7 +4,7 @@ const User = require("../models/user");
 const bcrypt = require("bcrypt");
 const AccessToken = require("../models/access_token");
 const { v4: uuid } = require("uuid");
-const access_token = require("../models/access_token");
+// const access_token = require("../models/access_token");
 
 router.post("/login", async (req, res) => {
   const { username, password } = req.body;
@@ -23,13 +23,14 @@ router.post("/login", async (req, res) => {
     if (!checkPassword)
       return res.status(500).json({ message: "Invalid Password" });
     const accesstoken = uuid();
-    const expiry = new Date(Date.now() + 1000 * 60 * 60);
+    const expiry = new Date(Date.now() + 1000*60*30 );
 
     await AccessToken.create({
       user_id: checkUserName.id,
       access_token: accesstoken,
       expiry,
     });
+    req.session.access_token=accesstoken
     return res
       .status(200)
       .json({
