@@ -10,12 +10,21 @@ const getDetails = require("./routers/UserDetails");
 const deleteData = require("./routers/DeleteData");
 const paginationRoute = require("./routers/pagination");
 const UserAddress = require("./routers/UserAddress");
+const session = require("express-session");
 // const bodyParser = require("body-parser");
 
 mongoose.connect(mongoURI).then(() => console.log("MongoDB Connected"));
 // app.use(bodyParser.json());
 app.use(express.json());
 // app.use(bodyParser.json());
+app.use(
+  session({
+    secret: "yourSecretKey",
+    resave: false,
+    saveUninitialization: false,
+    cookie: { maxAge: 1000 * 60 * 30 },
+  })
+);
 
 app.use("/user", userRoute);
 app.use("/user", userLogin);
