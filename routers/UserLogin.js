@@ -31,7 +31,7 @@ router.post("/login", async (req, res) => {
       id: checkUserName.id,
       username: checkUserName.username,
     };
-    const token = jwt.sign(payload, key, { expiresIn: "1d" });
+    const token = jwt.sign(payload, key, { expiresIn: "30min" });
 
 
     // await AccessToken.create({
