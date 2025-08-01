@@ -2,8 +2,10 @@ const express = require("express");
 const router = express.Router();
 const User = require("../models/user");
 const bcrypt = require("bcrypt");
-const AccessToken = require("../models/access_token");
-const { v4: uuid } = require("uuid");
+const jwt = require("jsonwebtoken");
+const key = process.env.JWTSECRETKEY;
+// const AccessToken = require("../models/access_token");
+// const { v4: uuid } = require("uuid");
 // const access_token = require("../models/access_token");
 
 router.post("/login", async (req, res) => {
@@ -22,22 +24,29 @@ router.post("/login", async (req, res) => {
     );
     if (!checkPassword)
       return res.status(500).json({ message: "Invalid Password" });
-    const accesstoken = uuid();
-    const expiry = new Date(Date.now() + 1000*60*30 );
+    // const accesstoken = uuid();
+    // const expiry = new Date(Date.now() + 1000 * 60 * 30);
 
-    await AccessToken.create({
-      user_id: checkUserName.id,
-      access_token: accesstoken,
-      expiry,
-    });
-    req.session.access_token=accesstoken
-    return res
-      .status(200)
-      .json({
-        message: "Login Successfully",
-        access_token: accesstoken,
-        expiry_at: expiry,
-      });
+    const payload = {
+      id: checkUserName.id,
+      username: checkUserName.username,
+    };
+    const token = jwt.sign(payload, key, { expiresIn: "30s" });
+
+
+    // await AccessToken.create({
+    //   user_id: checkUserName.id,
+    //   access_token: accesstoken,
+    //   expiry,
+    // });
+    // req.session.access_token = accesstoken;
+    // return res.status(200).json({
+    //   message: "Login Successfully",
+    //   access_token: accesstoken,
+    //   expiry_at: expiry,
+    // });
+
+    return res.json({message:"Login Successfully",token:token})
   } catch (err) {
     console.error(err);
     return res
