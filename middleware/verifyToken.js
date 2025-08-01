@@ -37,7 +37,9 @@ async function verification(req, res, next) {
   if (!token) return res.json({ message: "Access Denoed No token Provided" });
   try {
     const verifyToken = jwt.verify(token, process.env.JWTSECRETKEY);
-    req.User = verifyToken;
+    const user = await User.findById(verifyToken.id)
+    if(!user) return res.json({message:'user not found'})
+    req.user = user;
     next();
   } catch (error) {
     console.error("Verification middleware error:", error);

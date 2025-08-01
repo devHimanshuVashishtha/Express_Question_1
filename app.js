@@ -10,6 +10,7 @@ const getDetails = require("./routers/UserDetails");
 const deleteData = require("./routers/DeleteData");
 const paginationRoute = require("./routers/pagination");
 const UserAddress = require("./routers/UserAddress");
+const deleteAddress = require("./routers/DeleteAddress");
 const session = require("express-session");
 // const bodyParser = require("body-parser");
 
@@ -32,6 +33,7 @@ app.use("/user", getDetails);
 app.use("/user", deleteData);
 app.use("/user", paginationRoute);
 app.use("/user", UserAddress);
+app.use("/user", deleteAddress);
 
 app.listen(PORT, () => {
   console.log(`server Started at http://localhost:${PORT}`);
