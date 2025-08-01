@@ -1,17 +1,40 @@
-const express = require('express')
-const mongoose = require('mongoose')
-const app = express()
-const mongoURI = "mongodb+srv://himanshuvashishtha001hp:K3EGwGLdCQaz7Aqe@express1.kvkgela.mongodb.net/expressdb1?retryWrites=true&w=majority&appName=Express1"
-const PORT = 3000
-const userRoute = require('./routers/User')
-// K3EGwGLdCQaz7Aqe
+const express = require("express");
+const mongoose = require("mongoose");
+require("dotenv").config();
+const app = express();
+const mongoURI = process.env.Mongo_URI;
+const PORT = process.env.PORT;
+const userRoute = require("./routers/User");
+const userLogin = require("./routers/UserLogin");
+const getDetails = require("./routers/UserDetails");
+const deleteData = require("./routers/DeleteData");
+const paginationRoute = require("./routers/pagination");
+const UserAddress = require("./routers/UserAddress");
+const deleteAddress = require("./routers/DeleteAddress");
+const session = require("express-session");
+// const bodyParser = require("body-parser");
 
-app.use(express.json())
+mongoose.connect(mongoURI).then(() => console.log("MongoDB Connected"));
+// app.use(bodyParser.json());
+app.use(express.json());
+// app.use(bodyParser.json());
+app.use(
+  session({
+    secret: "yourSecretKey",
+    resave: false,
+    saveUninitialization: false,
+    cookie: { maxAge: 1000 * 60 * 30 },
+  })
+);
 
-app.use('/user',userRoute)
+app.use("/user", userRoute);
+app.use("/user", userLogin);
+app.use("/user", getDetails);
+app.use("/user", deleteData);
+app.use("/user", paginationRoute);
+app.use("/user", UserAddress);
+app.use("/user", deleteAddress);
 
-mongoose.connect(mongoURI).then(console.log('MongoDB Connected'))
-
-app.listen(PORT,()=>{
-    console.log(`server Started at http://localhost:${PORT}`)
-})
+app.listen(PORT, () => {
+  console.log(`server Started at http://localhost:${PORT}`);
+});
