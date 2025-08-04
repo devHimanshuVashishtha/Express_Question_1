@@ -28,6 +28,10 @@ const userSchema = mongoose.Schema({
     minlength: 8,
   },
   addresses: [{ type: mongoose.Schema.Types.ObjectId, ref: "Address" }],
+  tokenIssuedAT: {
+    type: Date,
+    default: null,
+  },
 });
 
 module.exports = mongoose.model("User", userSchema);

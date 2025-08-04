@@ -30,7 +30,7 @@ async function verification(req, res, next) {
 
   if (!authHeader || !authHeader.startsWith("Bearer ")) {
     return res.status(401).json({
-      message: "Access Denied. No token provided or token is malformed.",
+      message: "Access Denied. No token provided ",
     });
   }
   const token = authHeader.split(" ")[1];

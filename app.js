@@ -12,20 +12,22 @@ const paginationRoute = require("./routers/pagination");
 const UserAddress = require("./routers/UserAddress");
 const deleteAddress = require("./routers/DeleteAddress");
 const session = require("express-session");
+const forgotPass = require("./routers/forgtet-password");
+const VerifyForgotPass = require("./routers/verify-fogotPass");
 // const bodyParser = require("body-parser");
 
 mongoose.connect(mongoURI).then(() => console.log("MongoDB Connected"));
 // app.use(bodyParser.json());
 app.use(express.json());
 // app.use(bodyParser.json());
-app.use(
-  session({
-    secret: "yourSecretKey",
-    resave: false,
-    saveUninitialization: false,
-    cookie: { maxAge: 1000 * 60 * 30 },
-  })
-);
+// app.use(
+//   session({
+//     secret: "yourSecretKey",
+//     resave: false,
+//     saveUninitialization: false,
+//     cookie: { maxAge: 1000 * 60 * 30 },
+//   })
+// );
 
 app.use("/user", userRoute);
 app.use("/user", userLogin);
@@ -34,6 +36,8 @@ app.use("/user", deleteData);
 app.use("/user", paginationRoute);
 app.use("/user", UserAddress);
 app.use("/user", deleteAddress);
+app.use("/user", forgotPass);
+app.use("/user", VerifyForgotPass);
 
 app.listen(PORT, () => {
   console.log(`server Started at http://localhost:${PORT}`);

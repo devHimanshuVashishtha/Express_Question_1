@@ -4,6 +4,7 @@ const User = require("../models/user");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const key = process.env.JWTSECRETKEY;
+const {tokenGenerator} = require('../middleware/Token-generator')
 // const AccessToken = require("../models/access_token");
 // const { v4: uuid } = require("uuid");
 // const access_token = require("../models/access_token");
@@ -27,11 +28,11 @@ router.post("/login", async (req, res) => {
     // const accesstoken = uuid();
     // const expiry = new Date(Date.now() + 1000 * 60 * 30);
 
-    const payload = {
-      id: checkUserName.id,
-      username: checkUserName.username,
-    };
-    const token = jwt.sign(payload, key, { expiresIn: "30min" });
+    // const payload = {
+      // id: checkUserName.id,
+      // username: checkUserName.username,
+    // };
+    const token = tokenGenerator({id:checkUserName.is , username:checkUserName.username})
 
 
     // await AccessToken.create({
