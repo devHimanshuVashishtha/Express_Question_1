@@ -1,59 +1,92 @@
 const express = require("express");
 const router = express.Router();
 const User = require("../models/user");
-const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
+// const bcrypt = require("bcrypt");
+// const jwt = require("jsonwebtoken");
 const key = process.env.JWTSECRETKEY;
-const {tokenGenerator} = require('../middleware/Token-generator')
+const { tokenGenerator } = require("../middleware/Token-generator");
+const passport = require("passport");
 // const AccessToken = require("../models/access_token");
 // const { v4: uuid } = require("uuid");
 // const access_token = require("../models/access_token");
 
-router.post("/login", async (req, res) => {
-  const { username, password } = req.body;
-  if (!username || !password)
-    return res.status(500).json({ message: "Please Enter all the field" });
-  try {
-    const checkUserName = await User.findOne({ username });
-    if (!checkUserName)
-      return res
-        .status(500)
-        .json({ message: "No username Found Please register" });
-    const checkPassword = await bcrypt.compare(
-      password,
-      checkUserName.password
-    );
-    if (!checkPassword)
-      return res.status(500).json({ message: "Invalid Password" });
-    // const accesstoken = uuid();
-    // const expiry = new Date(Date.now() + 1000 * 60 * 30);
+router.post("/login", (req, res, next) => {
+  console.log("Inside login route");
 
-    // const payload = {
-      // id: checkUserName.id,
-      // username: checkUserName.username,
-    // };
-    const token = tokenGenerator({id:checkUserName.is , username:checkUserName.username})
+  passport.authenticate("local", (err, user, info) => {
+    if (err) {
+      console.error("Passport error:", err);
+      return next(err);
+    }
 
+    if (!user) {
+      console.log("User not found or wrong password");
+      return res.status(401).json({ message: info.message || "Login failed" });
+    }
 
-    // await AccessToken.create({
-    //   user_id: checkUserName.id,
-    //   access_token: accesstoken,
-    //   expiry,
-    // });
-    // req.session.access_token = accesstoken;
-    // return res.status(200).json({
-    //   message: "Login Successfully",
-    //   access_token: accesstoken,
-    //   expiry_at: expiry,
-    // });
+    req.logIn(user, (err) => {
+      if (err) {
+        console.error("req.logIn error:", err);
+        return next(err);
+      }
 
-    return res.json({message:"Login Successfully",token:token})
-  } catch (err) {
-    console.error(err);
-    return res
-      .status(500)
-      .json({ message: "Server Error", error: err.message });
-  }
+      console.log("User logged in, generating token...");
+      const token = tokenGenerator({
+        id: user._id,
+        username: user.username,
+      });
+
+      return res.json({ message: "Logged in successfully", token });
+    });
+  })(req, res, next); // <-- THIS IS ESSENTIAL
+// });
+
+  // const { username, password } = req.body;
+  // if (!username || !password)
+  //   return res.status(500).json({ message: "Please Enter all the field" });
+  // try {
+  //   const checkUserName = await User.findOne({ username });
+  //   if (!checkUserName)
+  //     return res
+  //       .status(500)
+  //       .json({ message: "No username Found Please register" });
+  //   const checkPassword = await bcrypt.compare(
+  //     password,
+  //     checkUserName.password
+  //   );
+  //   if (!checkPassword)
+  //     return res.status(500).json({ message: "Invalid Password" });
+  //    const accesstoken = uuid();
+  // const expiry = new Date(Date.now() + 1000 * 60 * 30);
+
+  // const payload = {
+  // id: checkUserName.id,
+  // username: checkUserName.username,
+  // };
+  // const token = tokenGenerator({
+  //   id: checkUserName.is,
+  //   username: checkUserName.username,
+  // });
+
+  // await AccessToken.create({
+  //   user_id: checkUserName.id,
+  //   access_token: accesstoken,
+  //   expiry,
+  // });
+  // req.session.access_token = accesstoken;
+  // return res.status(200).json({
+  //   message: "Login Successfully",
+  //   access_token: accesstoken,
+  //   expiry_at: expiry,
+  // });
+
+  //   return res.json({ message: "Login Successfully", token: token });
+  // } catch (err) {
+  //   console.error(err);
+  //   return res
+  //     .status(500)
+  //     .json({ message: "Server Error", error: err.message });
+  // }
 });
 
 module.exports = router;

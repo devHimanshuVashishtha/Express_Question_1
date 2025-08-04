@@ -14,20 +14,27 @@ const deleteAddress = require("./routers/DeleteAddress");
 const session = require("express-session");
 const forgotPass = require("./routers/forgtet-password");
 const VerifyForgotPass = require("./routers/verify-fogotPass");
+const passport = require("passport");
+require("./utils/configPassport")(passport);
 // const bodyParser = require("body-parser");
 
 mongoose.connect(mongoURI).then(() => console.log("MongoDB Connected"));
 // app.use(bodyParser.json());
 app.use(express.json());
 // app.use(bodyParser.json());
-// app.use(
-//   session({
-//     secret: "yourSecretKey",
-//     resave: false,
-//     saveUninitialization: false,
-//     cookie: { maxAge: 1000 * 60 * 30 },
-//   })
-// );
+// app.use(express.urlencoded({ extended: true }));
+
+app.use(
+  session({
+    secret: "yourSecretKey",
+    resave: false,
+    saveUninitialization: false,
+    cookie: { maxAge: 1000 * 60 * 30 },
+  })
+);
+
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.use("/user", userRoute);
 app.use("/user", userLogin);
