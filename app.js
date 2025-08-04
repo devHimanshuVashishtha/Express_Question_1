@@ -14,6 +14,7 @@ const deleteAddress = require("./routers/DeleteAddress");
 const session = require("express-session");
 const forgotPass = require("./routers/forgtet-password");
 const VerifyForgotPass = require("./routers/verify-fogotPass");
+const uploadRoute = require("./routers/UploadLocal");
 const passport = require("passport");
 require("./utils/configPassport")(passport);
 // const bodyParser = require("body-parser");
@@ -35,6 +36,8 @@ app.use(
 
 app.use(passport.initialize());
 app.use(passport.session());
+app.use("/uploads", express.static("uploads"));
+app.use("/user", uploadRoute);
 
 app.use("/user", userRoute);
 app.use("/user", userLogin);
