@@ -2,7 +2,7 @@ const express = require("express");
 const User = require("../models/user");
 const router = express.Router();
 const bcrypt = require("bcrypt");
-
+const sendMial = require("../utils/mailsender");
 router.post("/register", async (req, res) => {
   const { username, email, firstname, lastname, password, confirmPassword } =
     req.body;
@@ -39,6 +39,9 @@ router.post("/register", async (req, res) => {
       password: hashedPassword,
     });
     await user.save();
+    const html = `<h1>Welcome ${user.username}</h1>
+    <p>You have Successfully register</p>`;
+    await sendMial(user.email,"register Successfully",html)
     return res.status(200).json({ message: "registration Done", user: user });
   } catch (err) {
     console.error(err);
