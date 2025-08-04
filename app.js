@@ -17,13 +17,10 @@ const VerifyForgotPass = require("./routers/verify-fogotPass");
 const uploadRoute = require("./routers/UploadLocal");
 const passport = require("passport");
 require("./utils/configPassport")(passport);
-// const bodyParser = require("body-parser");
 
 mongoose.connect(mongoURI).then(() => console.log("MongoDB Connected"));
-// app.use(bodyParser.json());
+
 app.use(express.json());
-// app.use(bodyParser.json());
-// app.use(express.urlencoded({ extended: true }));
 
 app.use(
   session({
