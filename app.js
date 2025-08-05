@@ -16,6 +16,7 @@ const forgotPass = require("./routers/forgtet-password");
 const VerifyForgotPass = require("./routers/verify-fogotPass");
 const uploadRoute = require("./routers/UploadLocal");
 const passport = require("passport");
+const uploadcloudRoute = require("./routers/UploadCloud");
 require("./utils/configPassport")(passport);
 
 mongoose.connect(mongoURI).then(() => console.log("MongoDB Connected"));
@@ -35,6 +36,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use("/uploads", express.static("uploads"));
 app.use("/user", uploadRoute);
+app.use("/user", uploadcloudRoute);
 
 app.use("/user", userRoute);
 app.use("/user", userLogin);
