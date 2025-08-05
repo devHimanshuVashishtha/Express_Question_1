@@ -20,6 +20,7 @@ const uploadcloudRoute = require("./routers/UploadCloud");
 require("./utils/configPassport")(passport);
 const fetchData = require("./axiosPratice/fetchapimjs");
 const flipkart = require("./axiosPratice/categorydetail");
+const snapdeal = require("./axiosPratice/fetchshirt");
 
 mongoose.connect(mongoURI).then(() => console.log("MongoDB Connected"));
 
@@ -52,6 +53,7 @@ app.use("/user", VerifyForgotPass);
 
 app.use("/", fetchData);
 app.use("/", flipkart);
+app.use("/", snapdeal);
 
 app.listen(PORT, () => {
   console.log(`server Started at http://localhost:${PORT}`);
