@@ -18,6 +18,8 @@ const uploadRoute = require("./routers/UploadLocal");
 const passport = require("passport");
 const uploadcloudRoute = require("./routers/UploadCloud");
 require("./utils/configPassport")(passport);
+const fetchData = require("./axiosPratice/fetchapimjs");
+const flipkart = require("./axiosPratice/categorydetail");
 
 mongoose.connect(mongoURI).then(() => console.log("MongoDB Connected"));
 
@@ -47,6 +49,9 @@ app.use("/user", UserAddress);
 app.use("/user", deleteAddress);
 app.use("/user", forgotPass);
 app.use("/user", VerifyForgotPass);
+
+app.use("/", fetchData);
+app.use("/", flipkart);
 
 app.listen(PORT, () => {
   console.log(`server Started at http://localhost:${PORT}`);
