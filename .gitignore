@@ -90,3 +90,5 @@ coverage/
 
 # Custom ignore
 dist/
+
+postRequest.js
