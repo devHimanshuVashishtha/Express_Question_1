@@ -14,9 +14,9 @@ router.get("/fetch-axios/nav/:scheme_code", async (req, res) => {
       },
     });
     const data = response.data;
-    res.json({ message: "done", NAV: data.data.NAV });
+    res.status(200).json({ message: "done", NAV: data.data.NAV });
   } catch (err) {
-    res.json({ message: "Faild to load data", Error: err.message });
+    res.status(503).json({ message: "Faild to load data", Error: err.message });
   }
 });
 

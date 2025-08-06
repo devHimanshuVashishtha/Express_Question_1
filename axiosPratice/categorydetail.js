@@ -10,12 +10,12 @@ router.get("/fetch/flipkart/mobile", async (req, res) => {
     const smartphones = productdetails.filter(
       (product) => product.category === "smartphones"
     );
-    res.json({
+    res.sendStatus(200).json({
       category: "smartphones",
       product: smartphones,
     });
   } catch (err) {
-    res.json({ message: "faild to get the response", Error: err.message });
+    res.status(404).json({ message: "faild to get the response", Error: err.message });
   }
 });
 

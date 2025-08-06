@@ -18,12 +18,12 @@ router.get("/fetch/nav/:scheme_code", async (req, res) => {
     const response = await fetch(url, option);
     const data = await response.json();
     const data1 = data.data.NAV;
-    res.json({
+    res.status(200).json({
       message: "done",
       NAV: data1,
     });
   } catch (err) {
-    res.json({ message: "server Error", Error: err.message });
+    res.status(500).json({ message: "server Error", Error: err.message });
   }
 });
 
